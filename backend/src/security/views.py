@@ -70,3 +70,48 @@ def generate_active_code(username):
         return {'message': 'otp code sent'}, 200
     return {'message': 'your account allready activated'}, 200
 
+
+@auth.route('/activate/', methods=['POST'])
+def active_user():
+    """
+        Activate user by otp code
+        arguments:
+            {
+                username:str,
+                auth_code:str
+            }     
+    """
+    if not request.is_json:
+        return {'errors': 'invalid argument'}, 400
+
+    username = request.get_json().get('username')
+    auth_code = request.get_json().get('auth_code')
+
+    if not username or not auth_code:
+        return {'errors': 'Invalid username/auth_code'}, 400
+
+    user = User.query.filter_by(username=username).first()
+
+    if not user:
+        return {'errors': 'username/auth_code not'}, 401
+
+    verification = Verification.query.filter_by(user_id=user.id, auth_code=auth_code).first()
+
+    if not verification:
+        return {'errors': 'username/auth_code not'}, 401
+
+    if verification.expire_datetime < datetime.now():
+        return {'errors': 'auth_code expired'}, 401
+
+    # Activate user
+    user.active = True
+
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except IntegrityError:
+        db.session.rollback()
+        return {'errors': 'server error'}, 500
+
+    return {}, 204
+
