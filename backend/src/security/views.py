@@ -150,3 +150,15 @@ def generate_tokens():
     refresh_token = create_refresh_token(identity=user.username)
     return {'access_token': access_token, 'refresh_token': refresh_token}, 200
 
+
+@auth.route('/token/', methods=['PUT'])
+@jwt_required(refresh=True)
+def generate_access_token():
+
+    username = get_jwt_identity()
+    
+    user = User.query.filter_by(username=username).first()
+
+    access_token = create_access_token(identity=username, fresh=False, additional_claims={'role': user.role})
+    refresh_token = create_refresh_token(identity=username)
+    return {'access_token': access_token, 'refresh_token': refresh_token}, 200
