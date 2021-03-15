@@ -42,3 +42,31 @@ def create_user():
 
     return {'message': 'Account created successfully'}, 201
 
+
+@auth.route('/activate/<string:username>/', methods=['GET'])
+def generate_active_code(username):
+    """
+        Generate otp code and send sms to user
+        arguments:
+            username: str -> path_variable
+    """
+    user = User.query.filter_by(username=username).first()
+    if not user:
+        return {'errors': 'username not found'}, 404
+    
+    if user.active == False:
+        # send opt code
+        
+        try:
+            verification = generate_verification()
+            user.verifications.append(verification)
+            db.session.add(user)
+            db.session.commit()
+        except IntegrityError:
+            db.session.rollback()
+            return {'message': 'opt code not created'}, 500
+
+        send_otp_code(username, verification.auth_code)
+        return {'message': 'otp code sent'}, 200
+    return {'message': 'your account allready activated'}, 200
+
