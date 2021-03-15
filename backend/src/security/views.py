@@ -13,7 +13,7 @@ from src.security.utils import send_otp_code, generate_verification, generate_us
 @auth.route('/register/', methods=['POST'])
 def create_user():
     """
-        Create user if not exists and send opt code to phones for validate use
+        Create user if not exists
         arguments:
             {
                 username: str,
@@ -69,7 +69,7 @@ def generate_active_code(username):
             db.session.commit()
         except IntegrityError:
             db.session.rollback()
-            return {'message': 'opt code not created'}, 500
+            return {'errors': 'opt code not created'}, 500
 
         send_otp_code(username, verification.auth_code)
         return {'message': 'otp code sent'}, 200
@@ -154,7 +154,9 @@ def generate_tokens():
 @auth.route('/token/', methods=['PUT'])
 @jwt_required(refresh=True)
 def generate_access_token():
-
+    """
+        regenerate access-token and refresh-token
+    """
     username = get_jwt_identity()
     
     user = User.query.filter_by(username=username).first()

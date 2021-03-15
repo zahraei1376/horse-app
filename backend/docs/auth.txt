@@ -1,0 +1,88 @@
+/auth/
+------
+
+/auth/register [POST]
+-------------
+<< Create user if not exists >>
+   -------------------------
+req:
+    body:
+        username: string
+        password: string
+
+res:
+    body:
+        error -> {'error': 'reason'}
+        ok -> {'message': 'content'}
+    status_codes:
+        400
+        201
+
+/auth/activate/<username>/ ['GET']
+-------------------------
+<< Generate otp code and send sms to user >>
+   -------------------------------------- 
+req:
+    path_variable:
+        username: string
+res:
+    body:
+        error -> {'error': 'reason'}
+        ok -> {'message': 'content'}
+    status_codes:
+        404
+        500
+        200
+
+/auth/activate/ ['POST']
+---------------
+<< Activate user by otp code >>
+   -------------------------
+req:
+    body:
+        usename: string
+        auth_code: string
+res:
+    body:
+        error -> {'error': 'reason'}
+        ok -> {}
+    status_code:
+        400
+        401
+        500
+        204
+
+
+/auth/token/ ['POST']
+------------
+<< Generate access token and refresh token if user exists >>
+   ------------------------------------------------------
+req:
+    body:
+        username: string
+        password: string
+res:
+    body:
+        error -> {'error': 'reason'}
+        ok -> {'access_token': 'ac-token', 'refresh_token': 'ref-token'}
+    status_code:
+        400
+        404
+        200
+
+/auth/token/ ['PUT']
+------------
+<< regenerate access-token and refresh-token >>
+   -----------------------------------------
+* refresh-token place in Authorization header
+req:
+    header: 
+        Authorization: Bearer eyJ0e......
+res:
+    body:
+        error -> {'msg', 'content'}
+        ok -> {'access_token': 'ac-token', 'refresh_token': 'ref-token'}
+    status_code:
+        401
+        422
+        200
