@@ -2,9 +2,14 @@ from datetime import datetime
 
 from flask import request
 from sqlalchemy.exc import IntegrityError
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+
 from src.main import db
 from src.security import auth
 from src.security.models import User, Verification
+from src.security.utils import send_otp_code, generate_verification, generate_user
+
+
 @auth.route('/register/', methods=['POST'])
 def create_user():
     """
@@ -114,4 +119,34 @@ def active_user():
         return {'errors': 'server error'}, 500
 
     return {}, 204
+
+
+@auth.route('/token/', methods=['POST'])
+def generate_tokens():
+    """
+        Generate access token and refresh token if user exists
+        arguments:
+            {
+                username: str,
+                password: str
+            }
+    """
+
+    if not request.is_json:
+        return {'errors': 'invalid argument'}, 400
+
+    username = request.get_json().get('username')
+    password = request.get_json().get('password')
+
+    if not username or not password:
+        return {'errors': 'Invalid Username/Password'}, 400
+
+    user = User.query.filter_by(username=username).first()
+
+    if not user or not user.check_password(password):
+        return {'errors': 'Username/password not found'}, 404
+
+    access_token = create_access_token(identity=user.username, fresh=True, additional_claims={'role': user.role})
+    refresh_token = create_refresh_token(identity=user.username)
+    return {'access_token': access_token, 'refresh_token': refresh_token}, 200
 
