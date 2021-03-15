@@ -7,3 +7,10 @@ app.config.from_object(Development)
 
 # import extensions
 from src.extensions import *
+
+
+# register bluprints
+from src.security import auth
+
+app.register_blueprint(auth)
+
