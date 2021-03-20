@@ -8,6 +8,7 @@ from src.main import db
 from src.security import auth
 from src.security.models import User, Verification
 from src.security.utils import send_otp_code, generate_verification, generate_user
+from src.utils.utils import has_role
 
 
 @auth.route('/register/', methods=['POST'])
@@ -164,3 +165,30 @@ def generate_access_token():
     access_token = create_access_token(identity=username, fresh=False, additional_claims={'role': user.role})
     refresh_token = create_refresh_token(identity=username)
     return {'access_token': access_token, 'refresh_token': refresh_token}, 200
+
+
+@auth.route('/upgrade/<int:id>/', methods=['POST'])
+@has_role('ADMIN')
+def upgrade_to_admin_user(id):
+    """
+        Update user to admin user.
+            * only admin users can access the route
+            status_code:
+                401
+                403
+                404
+                500
+                204
+    """
+    user = User.query.filter(User.id == id).first()
+
+    if not user:
+        return {'errors': 'User not found'}, 404
+    user.role = 'ADMIN'
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except IntegrityError as e:
+        db.session.rollback()
+        return {'errors': 'Something bad happened'}, 500
+    return {}, 204
