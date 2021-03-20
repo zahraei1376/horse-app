@@ -59,3 +59,35 @@ def create_plans():
 
     return {'plan': res}, 201
 
+
+@plans.route('/', methods=['GET'])
+@jwt_required
+def get_plans():
+    """
+        Retrieve all plans
+        return:
+            [
+                {
+                    "id": ..',
+                    "title": "...",
+                    "description": "...",
+                    "price": ...
+                },
+                ...
+            ]
+        response_codes:
+            200
+    """
+    all_plans = Plan.query.all()
+
+    plan_arr = [
+        {
+            'id': plan.id,
+            'title': plan.title,
+            'description': plan.description,
+            'price': plan.price
+        } for plan in all_plans
+    ]
+
+    return jsonify(plan_arr), 200
+
