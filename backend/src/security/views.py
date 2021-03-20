@@ -58,10 +58,10 @@ def generate_active_code(username):
     user = User.query.filter_by(username=username).first()
     if not user:
         return {'errors': 'username not found'}, 404
-    
-    if user.active == False:
+
+    if not user.active:
         # send opt code
-        
+
         try:
             verification = generate_verification()
             user.verifications.append(verification)
@@ -141,10 +141,10 @@ def generate_tokens():
     if not username or not password:
         return {'errors': 'Invalid Username/Password'}, 400
 
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(username=username, active=True).first()
 
     if not user or not user.check_password(password):
-        return {'errors': 'Username/password not found'}, 404
+        return {'errors': 'User not found or not activate'}, 404
 
     access_token = create_access_token(identity=user.username, fresh=True, additional_claims={'role': user.role})
     refresh_token = create_refresh_token(identity=user.username)
@@ -158,7 +158,7 @@ def generate_access_token():
         regenerate access-token and refresh-token
     """
     username = get_jwt_identity()
-    
+
     user = User.query.filter_by(username=username).first()
 
     access_token = create_access_token(identity=username, fresh=False, additional_claims={'role': user.role})
