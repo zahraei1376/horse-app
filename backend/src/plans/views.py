@@ -91,3 +91,54 @@ def get_plans():
 
     return jsonify(plan_arr), 200
 
+
+@plans.route('/<int:id>/', methods=['PUT'])
+@is_body_json
+@has_role(role='ADMIN')
+def modify_plans(id):
+    """
+        Change plan values if plan exists
+            * only admin users can access to this route
+        arguments:
+            id: path_variable
+            body:
+                {
+                    title (optional): str,
+                    description (optional): str,
+                    price (optional): float
+                }
+        return:
+            error -> {'errors: '...'}
+            ok -> {}
+        response_codes:
+            400
+            404
+            500
+            204
+            200
+    """
+    title = request.get_json().get('title')
+    description = request.get_json().get('description')
+    price = request.get_json().get('price')
+    if not title and not description and not price:
+        return {}, 204
+
+    plan = Plan.query.filter(Plan.id == id).first()
+    if not plan:
+        return {'errors': 'Plan not found'}, 404
+
+    try:
+        if title:
+            plan.title = title
+        if description:
+            plan.description = description
+        if price:
+            plan.price = price
+        db.session.add(plan)
+        db.session.commit()
+    except IntegrityError as e:
+        db.session.rollback()
+        return {'errors': 'Something bad happened'}, 500
+
+    return {'message': 'Plan changed'}, 200
+
