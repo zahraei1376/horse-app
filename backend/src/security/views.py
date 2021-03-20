@@ -49,6 +49,22 @@ def create_user():
     return {'message': 'Account created successfully'}, 201
 
 
+@auth.route('/users/', methods=['GET'])
+def get_users():
+    users_all = [
+        {
+            'id': user.id,
+            'username': user.username,
+            'name': user.name,
+            'active': user.active,
+            'state': user.state,
+            'city': user.city,
+            'role': user.role
+        } for user in User.query.all()
+    ]
+    return {'users': users_all}, 200
+
+
 @auth.route('/activate/<string:username>/', methods=['GET'])
 def generate_active_code(username):
     """
