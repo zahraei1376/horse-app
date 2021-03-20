@@ -142,3 +142,30 @@ def modify_plans(id):
 
     return {'message': 'Plan changed'}, 200
 
+
+@plans.route('/<int:id>/', methods=['DELETE'])
+@has_role(role='ADMIN')
+def delete_plan(id):
+    """
+        Delete plan if plan exists
+            * only admin users can access to this route
+        arguments:
+            id: path_variable
+        return:
+            errors -> {'errors', '...'}
+            ok -> {}
+        response_codes:
+            404
+            500
+            204
+    """
+    plan = Plan.query.filter(Plan.id == id).first()
+    if not plan:
+        return {'errors': 'Plan not exists'}, 404
+    try:
+        db.session.delete(plan)
+        db.session.commit()
+    except IntegrityError as e:
+        db.session.rollback()
+        return {'errors': 'Something bad happened'}, 500
+    return {}, 204
