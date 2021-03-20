@@ -11,6 +11,10 @@ from src.extensions import *
 
 # register bluprints
 from src.security import auth
+from src.plans import plans
+from src.purchase import purchase
 
 app.register_blueprint(auth)
+app.register_blueprint(plans)
+app.register_blueprint(purchase)
 

@@ -10,7 +10,7 @@ class Base:
 class Development(Base):
     DEBUG = True
     SQLALCHEMY_DATABASE_URI = 'sqlite:////tmp/horsedb.db'
-    SQLALCHEMY_ECHO = True
+    # SQLALCHEMY_ECHO = True
     
     
 class Production(Base):
