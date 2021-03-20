@@ -14,7 +14,7 @@ from src.plans.models import Plan
 def create_plans():
     """
         Create new application plan.
-            * only admin users can do this
+            * only admin users can access the route
         arguments:
             body:
                 {
@@ -31,7 +31,7 @@ def create_plans():
                         "price": ...,
                         "title": "..."
                   }
-        response_codes:
+        status_codes:
             400
             500
             201
@@ -75,7 +75,7 @@ def get_plans():
                 },
                 ...
             ]
-        response_codes:
+        status_codes:
             200
     """
     all_plans = Plan.query.all()
@@ -98,7 +98,7 @@ def get_plans():
 def modify_plans(id):
     """
         Change plan values if plan exists
-            * only admin users can access to this route
+            * only admin users can access the route
         arguments:
             id: path_variable
             body:
@@ -110,7 +110,7 @@ def modify_plans(id):
         return:
             error -> {'errors: '...'}
             ok -> {}
-        response_codes:
+        status_codes:
             400
             404
             500
@@ -148,13 +148,13 @@ def modify_plans(id):
 def delete_plan(id):
     """
         Delete plan if plan exists
-            * only admin users can access to this route
+            * only admin users can access the route
         arguments:
             id: path_variable
         return:
             errors -> {'errors', '...'}
             ok -> {}
-        response_codes:
+        status_codes:
             404
             500
             204

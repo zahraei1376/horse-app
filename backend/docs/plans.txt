@@ -1,0 +1,92 @@
+/plans/
+-------
+
+/plans/ [POST]
+-------
+<< Create new application plan. >>
+   ----------------------------
+   * only admin users can access the route
+req:
+    body:
+        title: string
+        description: string
+        price: float
+
+res:
+    body:
+        error -> {'errors': '...'}
+        ok -> {
+            "plan": {
+                "creation_datetime": "...",
+                "description": "...",
+                "id": ...,
+                "price": ...,
+                "title": "..."
+            }
+        }
+    status_codes:
+        400
+        500
+        201
+
+/plans/ ['GET']
+-------
+<< Retrieve all plans >>
+   ------------------
+req:
+    * jwt_required
+res:
+    body:
+        [
+            {
+                "id": ..',
+                "title": "...",
+                "description": "...",
+                "price": ...
+            },
+            ...
+        ]
+    status_codes:
+    200
+
+/plans/<id>/ ['PUT]
+--------------------
+<< Change plan values if plan exists >>
+   ---------------------------------
+   * only admin users can access the route
+req:
+    path_variable:
+        id: integer
+    body:
+        {
+            title (optional): str,
+            description (optional): str,
+            price (optional): float
+        }
+res:
+    body:
+        error -> {'errors: '...'}
+        ok -> {}
+    status_codes:
+        400
+        404
+        500
+        204
+        200
+
+/plans/<id>/ ['DELETE']
+-------
+<< Delete plan if plan exists >>
+   --------------------------
+   * only admin users can access the route
+req:
+    path_variable:
+        id: integer
+res:
+    body:
+        error -> errors -> {'errors', '...'}
+        ok -> {}
+    status_codes:
+        404
+        500
+        204
