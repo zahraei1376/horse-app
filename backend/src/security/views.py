@@ -50,7 +50,31 @@ def create_user():
 
 
 @auth.route('/users/', methods=['GET'])
+@has_role('ADMIN')
 def get_users():
+    """
+        Get users with `index` and `batch_size`
+            * only admin users can access the route
+        request_params:
+            index: integer (default=0)
+            batch_size: integer (default=30)
+        return:
+            body:[
+                    {
+                        'id': ...,
+                        'username': ...,
+                        'name': ...,
+                        'active': ...,
+                        'state': ...,
+                        'city': ...,
+                        'role': ...
+                    }
+                ]
+    """
+
+    index = request.args.get('index') if request.args.get('index') else 0
+    batch_size = request.args.get('batch_size') if request.args.get('batch_size') else 30
+
     users_all = [
         {
             'id': user.id,
@@ -60,7 +84,7 @@ def get_users():
             'state': user.state,
             'city': user.city,
             'role': user.role
-        } for user in User.query.all()
+        } for user in User.query.offset(index * batch_size).limit(batch_size).all()
     ]
     return {'users': users_all}, 200
 
