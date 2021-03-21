@@ -86,3 +86,44 @@ res:
         401
         422
         200
+
+/auth/users/ ['GET']
+------------
+<< Get users with `index` and `batch_size` >>
+   ---------------------------------------
+   * only admin users can access the route
+req:
+    request_params:
+        index: integer (default=0)
+        batch_size: integer (default=30)
+res:
+    body:
+        [
+            {
+                'id': ...,
+                'username': ...,
+                'name': ...,
+                'active': ...,
+                'state': ...,
+                'city': ...,
+                'role': ...
+            }
+        ]
+    status_codes:
+        200
+
+/auth/upgrade/<id>/ ['POST']
+-------------------
+<< Update user to admin user. >>
+   --------------------------
+   * only admin users can access the route
+req:
+    path_variable:
+        id: string
+res:
+    status_codes:
+        401
+        403
+        404
+        500
+        204

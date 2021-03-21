@@ -70,6 +70,8 @@ def get_users():
                         'role': ...
                     }
                 ]
+        status_code:
+            200
     """
 
     index = request.args.get('index') if request.args.get('index') else 0
@@ -213,6 +215,8 @@ def upgrade_to_admin_user(id):
     """
         Update user to admin user.
             * only admin users can access the route
+            path_variable:
+                id: integer
             status_code:
                 401
                 403
