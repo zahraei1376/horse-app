@@ -69,12 +69,14 @@ export const ToolbarLinkLi = styled.li`
     ${ToolbarLinkContainerStyles};
     color:#fff;
     border-bottom:transparent;
-    transition:all 0.2s;
+    transition:all 0.3s;
     font-size:1.5rem;
     font-family:Nastaliq;
     border-radius:5rem;
     position:relative;
-    padding:2rem;
+    // padding:2rem;
+    border-bottom:1px solid transparent;
+    font-family:Bnazanin;
 
     ul {
        display:none;
@@ -88,15 +90,18 @@ export const ToolbarLinkLi = styled.li`
 
     &:hover{
       color:#CEA176;
-      transform:scale(1.1);
-      animation: ${rotate} 1s linear infinite;
+      cursor:pointer;
+      border-bottom:1px solid #fff;
+      // transform:scale(1.1);
+      // animation: ${rotate} 1s linear infinite;
     }
 `;
 
 export const ToolbarLinka = styled.a`
     text-decoration:none;
     color:#fff;
-    font-family:Nastaliq;
+    font-size:1.5rem;
+    font-family:Bnazanin;
 `;
 // clip-path: polygon(93% 8%, 100% 0, 100% 100%, 82% 100%, 46% 100%, 0 100%, 0 56%, 0 43%, 0 9%);
 export const ToolbarSubUL = styled.ul`

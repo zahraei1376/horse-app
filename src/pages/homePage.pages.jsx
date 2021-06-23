@@ -4,12 +4,16 @@ import CarouselComponnet from '../component/carouselHeader/carouselHeader.compon
 import AnswerQuestionComponent from '../component/answerQuestion/answerQuestion.component';
 import CustomersComments from '../component/CustomersComments/CustomersComments.component';
 import LastWeblog from '../component/lastWeblog/lastWeblog.component';
+import ProductForHomePage from '../component/productHomePage/productHomePage.component';
+import WayBuy from '../component/wayBuy/wayBuy.component';
 
 const HomePage = () =>{
     return (
         <div>
             <ToolbarContainer/>
             <CarouselComponnet/>
+            <ProductForHomePage/>
+            <WayBuy/>
             <AnswerQuestionComponent/>
             <CustomersComments/>
             <LastWeblog/>

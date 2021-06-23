@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const AnswerConatiner = styled.div`
     width:100%;
+    margin:10rem 0;
 `;
 
 export const AnswerTitle = styled.h1`

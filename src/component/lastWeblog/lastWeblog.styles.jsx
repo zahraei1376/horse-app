@@ -4,7 +4,7 @@ export const LastWeblogComponent = styled.div`
     display:flex;
     justifu-content:center;
     align-items:center;
-    margin-top:5rem;
+    margin:10rem 0;
 `;
 
 export const LastWeblogBox = styled.a`

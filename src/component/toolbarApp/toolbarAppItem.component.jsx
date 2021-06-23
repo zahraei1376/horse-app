@@ -1,132 +1,93 @@
-// import React from 'react';
-// import { makeStyles } from '@material-ui/core/styles';
-// import Accordion from '@material-ui/core/Accordion';
-// import AccordionSummary from '@material-ui/core/AccordionSummary';
-// import AccordionDetails from '@material-ui/core/AccordionDetails';
-// import Typography from '@material-ui/core/Typography';
-// import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-
-// const useStyles = makeStyles((theme) => ({
-//   root: {
-//     width: '100%',
-//   },
-//   heading: {
-//     fontSize: theme.typography.pxToRem(25),
-//     fontWeight: theme.typography.fontWeightRegular,
-//   },
-// }));
-
-// export default function ToolbarAppItems({items}) {
-//   const classes = useStyles();
-
-//   return (
-//     <div className={classes.root}>
-//         {
-//             items ? 
-//             items.map((item , index) =>(
-//                 <Accordion key={index}>
-//                     <AccordionSummary
-//                     expandIcon={item.subset.length ? <ExpandMoreIcon /> : ''}
-//                     aria-controls={`panel${index + 1}a-content`}
-//                     id={`panel${index + 1}a-header`}
-//                     >
-//                     <Typography className={classes.heading}>{item.item}</Typography>
-//                     </AccordionSummary>
-//                    {item.subset.length > 0 ? <AccordionDetails>
-//                         {
-//                             item.subset.length > 0 ? <ul>
-//                                 {item.subset.map((subItem , index) =>(
-//                                     <li key={index}><a>{subItem.subitem}</a></li>
-//                                 ))}
-//                             </ul> : ''
-//                         }
-//                     </AccordionDetails> : ''}
-//                 </Accordion>
-//             )) : ''
-//         }
-     
-//     </div>
-//   );
-// }
-/////////////////////////
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
-import MuiAccordion from '@material-ui/core/Accordion';
-import MuiAccordionSummary from '@material-ui/core/AccordionSummary';
-import MuiAccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
-
-const Accordion = withStyles({
-  root: {
-    border: '1px solid rgba(0, 0, 0, .125)',
-    boxShadow: 'none',
-    '&:not(:last-child)': {
-      borderBottom: 0,
-    },
-    '&:before': {
-      display: 'none',
-    },
-    '&$expanded': {
-      margin: 'auto',
-    },
+import clsx from 'clsx';
+import { makeStyles } from '@material-ui/core/styles';
+import Drawer from '@material-ui/core/Drawer';
+import Button from '@material-ui/core/Button';
+import List from '@material-ui/core/List';
+// import Divider from '@material-ui/core/Divider';
+// import ListItem from '@material-ui/core/ListItem';
+// import ListItemIcon from '@material-ui/core/ListItemIcon';
+// import ListItemText from '@material-ui/core/ListItemText';
+// import InboxIcon from '@material-ui/icons/MoveToInbox';
+// import MailIcon from '@material-ui/icons/Mail';
+////////////
+// import {LogoImg , ToolbarLinkLogo,ToolbarLinkLi,ToolbarLinka,ToolbarSubUL,ToolbarSubLi,ToolbarSuba} from './toolbarAppItem.styles';
+// import Logo from '../../assets/img/horseLogo.png';
+import MenuMobile from './menuMobile/menuMobile.component';
+const useStyles = makeStyles({
+  list: {
+    width: 250,
+    // direction:'rtl',
   },
-  expanded: {},
-})(MuiAccordion);
-
-const AccordionSummary = withStyles({
-  root: {
-    backgroundColor: 'rgba(0, 0, 0, .03)',
-    borderBottom: '1px solid rgba(0, 0, 0, .125)',
-    marginBottom: -1,
-    minHeight: 56,
-    '&$expanded': {
-      minHeight: 56,
-    },
+  fullList: {
+    width: 'auto',
   },
-  content: {
-    '&$expanded': {
-      margin: '12px 0',
-    },
-  },
-  expanded: {},
-})(MuiAccordionSummary);
+});
 
-const AccordionDetails = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiAccordionDetails);
+export default function TemporaryDrawer({items ,setShowMenu}) {
+  const classes = useStyles();
+  const [state, setState] = React.useState({
+    top: false,
+    left: true,
+    bottom: false,
+    right: false,
+  });
 
-export default function ToolbarAppItems({items}) {
-  const [expanded, setExpanded] = React.useState('panel1');
-
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
+  const toggleDrawer = (anchor, open) => (event) => {
+    if (event.type === 'keydown' && (event.key === 'Tab' || event.key === 'Shift')) {
+      return;
+    }
+    setShowMenu(false);
+    setState({ ...state, [anchor]: open });
   };
 
-  return (
-    <div style={{position:'absolute',top:'10rem',left:'0',width:'100%'}}>
-        {
-            items ? 
-            items.map((item , index) =>(
-                <Accordion key={index} square expanded={expanded === `panel${index + 1}`} onChange={handleChange(`panel${index + 1}`)}>
-                    <AccordionSummary aria-controls={`panel${index + 1}d-content`} id={`panel${index + 1}d-header`}>
-                    <Typography>{item.item}</Typography>
-                    </AccordionSummary>
-                    { item.subset.length > 0 ? 
-                    <AccordionDetails>
-                        { item.subset.length > 0 ? <ul>
-                                             {item.subset.map((subItem , i) =>(
-                                    <li key={i}><a>{subItem.subitem}</a></li>
-                                ))}
-                            </ul> : ''}
-                    </AccordionDetails> 
-                    : ''}
-                </Accordion>
- 
-            )) : ''
-        }
+  const list = (anchor) => (
+    <div
+      className={clsx(classes.list, {
+        [classes.fullList]: anchor === 'top' || anchor === 'bottom',
+      })}
+      role="presentation"
+      // onClick={toggleDrawer(anchor, false)}
+      // onKeyDown={toggleDrawer(anchor, false)}
+    >
+      <List>
+        <MenuMobile items={items} setShowMenu={setShowMenu}/>
+        
+      {/* <ToolbarLinkLogo to="/" ><LogoImg src={Logo} /></ToolbarLinkLogo>
+      {items.map((item , index) =>(
+        <div  key={index}>
+        <ToolbarLinkLi>{item.icon}<ToolbarLinka href="#">{item.item}</ToolbarLinka>
+        {item.subset.length > 0 ? <ToolbarSubUL>
+          { item.subset.map((subItem , index) =>{
+             return <ToolbarSubLi key={index}><ToolbarSuba href="#">{subItem.subitem}</ToolbarSuba></ToolbarSubLi>
+          }) }
+        </ToolbarSubUL> : ''}</ToolbarLinkLi>
+        
+        
+        </div>
+      ))} */}
+        {/* {items.map((MyItem, index) => (
+          <>
+          <ListItem button key={index}>
+            <ListItemIcon>{MyItem.icon}</ListItemIcon>
+            <ListItemText primary={MyItem.item} />
 
+        
+          </ListItem>
+          <Divider />
+          </>
+        ))} */}
+      </List>
+      
+      
+    </div>
+  );
+
+  return (
+    <div>
+      <Drawer anchor={'left'} open={state['left']} onClose={toggleDrawer('left', false)}>
+        {list('left')}
+      </Drawer>
     </div>
   );
 }

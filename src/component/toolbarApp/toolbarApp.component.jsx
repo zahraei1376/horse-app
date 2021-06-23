@@ -1,4 +1,4 @@
-import React , {useState} from 'react';
+import React , {useState , useEffect} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -39,6 +39,10 @@ export default function AppBarComponnet({items}) {
   const classes = useStyles();
   const [showMenu, setShowMenu] = useState(false);
 
+  useEffect(()=>{
+    console.log('showMenu',showMenu);
+  },[showMenu])
+
   return (
     <div className={classes.root}>
       <AppBar position="static" style={{backgroundColor:'#843910',}}>
@@ -54,7 +58,7 @@ export default function AppBarComponnet({items}) {
           </Typography> */}
           
         </Toolbar>
-        {showMenu ? <ToolbarAppItems items={items}/>: ''}
+        {showMenu ? <ToolbarAppItems items={items} setShowMenu={setShowMenu} />: ''}
       </AppBar>
     </div>
   );
